@@ -13,6 +13,7 @@
 <language name="GNU C">
 <includepath>C:\Program Files (x86)\Microchip\xc16\v1.25\support\PIC24F\h</includepath>
 <includepath>C:\Program Files (x86)\Microchip\xc16\v1.25\support\generic\h</includepath>
+<includepath>C:\Program Files (x86)\Microchip\xc16\v1.25\include</includepath>
 
 </language>
 </section>
