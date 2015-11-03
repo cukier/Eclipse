@@ -1,0 +1,25 @@
+CC=xc16-gcc
+CP=xc16-bin2hex
+PK2=pk2cmd
+
+DEVICE=24FJ64GB004
+UNIT=MAIN
+UNIT_FILE=main
+
+INSTALL_DIR=c:/Program\ Files\ \(x86\)/Microchip/xc16/v1.25
+
+CFLAGS=-I$(INSTALL_DIR)/support/PIC24F/h -T$(INSTALL_DIR)/support/PIC24F/gld/p$(DEVICE).gld -g -Wall -omf=cof -D__DEBUG
+#CFLAGS=-I$(INSTALL_DIR)/support/PIC24F/h -T$(INSTALL_DIR)/support/PIC24F/gld/p$(DEVICE).gld -g -Wall -omf=cof -mcpu=$(DEVICE) -D__DEBUG
+PK2FLAGS=-E -PPIC$(DEVICE) -M -R -J -F
+
+all: $(UNIT)
+
+$(UNIT): src/$(UNIT_FILE).c
+	$(CC) $(CFLAGS) src/$(UNIT_FILE).c -o Debug/$(UNIT_FILE).cof
+	$(CP) Debug/$(UNIT_FILE).cof
+	
+burn :
+	$(PK2) $(PK2FLAGS) Debug/$(UNIT_FILE).hex
+
+clean:
+	rm Debug/*

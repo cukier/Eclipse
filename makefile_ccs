@@ -1,0 +1,25 @@
+CC=ccsc
+PK2=pk2cmd
+
+UNIT=
+UNIT_FILE=
+DEVICE=PIC18F252
+
+CFLAGS=+FH +LN -T -A -M -Z +DF +Y=9 +STDOUT +EA
+BFLAGS=+FB +LN -T -A -M -Z +DF +Y=9 +STDOUT +EA
+
+PK2FLAGS=-E -P$(DEVICE) -M -R -J -F
+
+all: $(UNIT)
+
+Carretel: carretel.c
+	$(CC) $(CFLAGS) carretel.c
+	
+Carretel_Virtual: carretel_virtual.c
+	$(CC) $(BFLAGS) $(UNIT_FILE).c
+	
+burn:
+	$(PK2) $(PK2FLAGS) $(UNIT_FILE).hex
+
+clean:
+	rm *.ccspjt *.cof *.err *.esym *.hex *.lst *.xsym *.PWI *.SDF *.DBK
