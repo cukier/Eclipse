@@ -12,11 +12,8 @@ PK2FLAGS=-E -P$(DEVICE) -M -R -J -F
 
 all: $(UNIT)
 
-Carretel: carretel.c
-	$(CC) $(CFLAGS) carretel.c
-	
-Carretel_Virtual: carretel_virtual.c
-	$(CC) $(BFLAGS) $(UNIT_FILE).c
+$(UNIT): $(UNIT_FILE).c
+	$(CC) $(CFLAGS) $(UNIT_FILE).c
 	
 burn:
 	$(PK2) $(PK2FLAGS) $(UNIT_FILE).hex
