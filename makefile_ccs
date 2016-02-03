@@ -1,22 +1,41 @@
-CC=ccsc
+CC=Ccsc.exe
 PK2=pk2cmd
 
-UNIT=
-UNIT_FILE=
-DEVICE=PIC18F252
+DEVICE=PIC18F452
+UNIT=Carretel
+UNIT_FILE=carretel
+UNIT2=CarretelVirtual
+UNIT2_FILE=carretel_virtual
+OUT_DIR=Debug
+SRC_DIR=src
 
-CFLAGS=+FH +LN -T -A -M -Z +DF +Y=9 +STDOUT +EA
-BFLAGS=+FB +LN -T -A -M -Z +DF +Y=9 +STDOUT +EA
+#GLOBALS=+Gdebug="printf"
+#GLOBALS=""
+HFLAGS=+FH +LN -T -A -M -Z -J -M  +DF +Y=9 +STDOUT +EA
+BFLAGS=+FB +LN -T -A -M -Z -J -M  +DF +Y=9 +STDOUT +EA
+MFLAGS=+FM +LN -T -A -M -Z -J -M  +DF +Y=9 +STDOUT +EA
+PK2FLAGS=-E -P$(DEVICE) -M -R -F
 
-PK2FLAGS=-E -P$(DEVICE) -M -R -J -F
+.PHONY: all
 
-all: $(UNIT)
+all: $(UNIT) 
 
-$(UNIT): $(UNIT_FILE).c
-	$(CC) $(CFLAGS) $(UNIT_FILE).c
+$(UNIT): $(SRC_DIR)/$(UNIT_FILE).c
+	if [ ! -d $(OUT_DIR) ]; then mkdir $(OUT_DIR); fi
+	cp $(SRC_DIR)/*.[ch] $(OUT_DIR)
+	$(CC) $(HFLAGS) $(GLOBALS) $(OUT_DIR)/$(UNIT_FILE).c
+	[ ! -d $(OUT_DIR)/src ] && mkdir $(OUT_DIR)/src || rm -Rvf $(OUT_DIR)/src/*
+	mv $(OUT_DIR)/*.[ch] $(OUT_DIR)/src 
 	
-burn:
-	$(PK2) $(PK2FLAGS) $(UNIT_FILE).hex
+$(UNIT2): $(SRC_DIR)/$(UNIT2_FILE).c
+	if [ ! -d $(OUT_DIR) ]; then mkdir $(OUT_DIR); fi
+	cp $(SRC_DIR)/*.[ch] $(OUT_DIR)
+	$(CC) $(MFLAGS) $(OUT_DIR)/$(UNIT2_FILE).c
+	if [ ! -d $(OUT_DIR)/src ]; then mkdir $(OUT_DIR)/src; fi
+	mv $(OUT_DIR)/*.[ch] $(OUT_DIR)/src
 
-clean:
-	rm *.ccspjt *.cof *.err *.esym *.hex *.lst *.xsym *.PWI *.SDF *.DBK
+burn:
+	$(PK2) $(PK2FLAGS) $(OUT_DIR)/$(UNIT_FILE).hex
+
+clean:	
+	rm -Rvf $(OUT_DIR)/*
